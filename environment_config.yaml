@@ -1,7 +1,173 @@
 attributes:
-  fuel-ssl-openstack_text:
-    value: 'Set default value'
-    label: 'Text field'
-    description: 'Description for text field'
-    weight: 25
+  horizon:
+    value: false
+    label: "HTTPS for Horizon"
+    description: "Secure public access to Horizon enabling HTTPS instead of HTTP"
+    weight: 10
+    type: "checkbox"
+  horizon_public:
+    value: true
+    label: "Public horizon endpoint TLS"
+    weight: 15
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.horizon.value == false or settings:fuel-ssl-openstack.horizon.value == true"
+        action: "hide"
+  horizon_public_hostname:
+    value: "horizon.public.fuel.local"
+    label: "DNS hostname for public TLS endpoint for Horizon"
+    description: "Your DNS entries should point to this name. Self-signed certificates also will use this hostname"
+    weight: 20
     type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.horizon.value == false"
+        action: "hide"
+  horizon_public_usercert:
+    value: false
+    label: "Upload certificate for Horizon"
+    description: "Select if you want to upload your own keypair for Horizon"
+    weight: 30
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.horizon.value == false"
+        action: "hide"
+  horizon_public_certdata:
+    value: ""
+    label: "Horizon certificate"
+    description: "Certificate and private key data, placed one after another"
+    weight: 40
+    type: "textarea"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.horizon.value == false or settings:fuel-ssl-openstack.horizon_public_usercert.value == false"
+        action: "hide"
+
+  keystone:
+    value: false
+    label: "TLS for keystone"
+    description: "Secure access to keystone enabling TLS"
+    weight: 50
+    type: "checkbox"
+  keystone_public:
+    value: false
+    label: "Public keystone endpoint TLS"
+    weight: 55
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false"
+        action: "hide"
+  keystone_public_ip:
+    value: ""
+    label: "public IP address"
+    description: "Set explicit IP of public endpoint if you want. If not - leave it blank"
+    weight: 57
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_public.value == false"
+        action: "hide"
+  keystone_public_hostname:
+    value: "keystone.public.fuel.local"
+    label: "DNS hostname"
+    weight: 60
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_public.value == false"
+        action: "hide"
+  keystone_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 65
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_public.value == false"
+        action: "hide"
+  keystone_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 70
+    type: "textarea"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_public.value == false or settings:fuel-ssl-openstack.keystone_public_usercert.value == false"
+        action: "hide"
+  keystone_internal:
+    value: false
+    label: "Internal keystone endpoint TLS"
+    weight: 75
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false"
+        action: "hide"
+  keystone_internal_ip:
+    value: ""
+    label: "internal IP address"
+    description: "Set explicit IP of internal endpoint if you want. If not - leave it blank"
+    weight: 77
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_internal.value == false"
+        action: "hide"
+  keystone_internal_hostname:
+    value: "keystone.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 80
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_internal.value == false"
+        action: "hide"
+  keystone_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 85
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_internal.value == false"
+        action: "hide"
+  keystone_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 90
+    type: "textarea"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_internal.value == false or settings:fuel-ssl-openstack.keystone_internal_usercert.value == false"
+        action: "hide"
+  keystone_admin:
+    value: false
+    label: "Admin keystone endpoint TLS"
+    weight: 95
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false"
+        action: "hide"
+  keystone_admin_ip:
+    value: ""
+    label: "admin IP address"
+    description: "Set explicit IP of admin endpoint if you want. If not - leave it blank"
+    weight: 97
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_admin.value == false"
+        action: "hide"
+  keystone_admin_hostname:
+    value: "keystone.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 100
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_admin.value == false"
+        action: "hide"
+  keystone_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 105
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_admin.value == false"
+        action: "hide"
+  keystone_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 110
+    type: "textarea"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_admin.value == false or settings:fuel-ssl-openstack.keystone_admin_usercert.value == false"
+        action: "hide"
+
