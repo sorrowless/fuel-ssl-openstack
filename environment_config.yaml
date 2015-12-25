@@ -1,4 +1,13 @@
 attributes:
+  plugin_id:
+    value: 1
+    label: "temporary workaround to nailgun bug"
+    description: "temp"
+    weight: 5
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.horizon.value == false or settings:fuel-ssl-openstack.horizon.value == true"
+        action: "hide"
   horizon:
     value: false
     label: "HTTPS for Horizon"
@@ -36,7 +45,7 @@ attributes:
     label: "Horizon certificate"
     description: "Certificate and private key data, placed one after another"
     weight: 40
-    type: "textarea"
+    type: "file"
     restrictions:
       - condition: "settings:fuel-ssl-openstack.horizon.value == false or settings:fuel-ssl-openstack.horizon_public_usercert.value == false"
         action: "hide"
@@ -84,7 +93,7 @@ attributes:
     value: ""
     label: "Public endpoint certificate"
     weight: 70
-    type: "textarea"
+    type: "file"
     restrictions:
       - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_public.value == false or settings:fuel-ssl-openstack.keystone_public_usercert.value == false"
         action: "hide"
@@ -125,7 +134,7 @@ attributes:
     value: ""
     label: "Internal endpoint certificate"
     weight: 90
-    type: "textarea"
+    type: "file"
     restrictions:
       - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_internal.value == false or settings:fuel-ssl-openstack.keystone_internal_usercert.value == false"
         action: "hide"
@@ -166,8 +175,973 @@ attributes:
     value: ""
     label: "Admin endpoint certificate"
     weight: 110
-    type: "textarea"
+    type: "file"
     restrictions:
       - condition: "settings:fuel-ssl-openstack.keystone.value == false or settings:fuel-ssl-openstack.keystone_admin.value == false or settings:fuel-ssl-openstack.keystone_admin_usercert.value == false"
         action: "hide"
 
+  nova:
+    value: false
+    label: "TLS for nova"
+    description: "Secure access to nova enabling TLS"
+    weight: 115
+    type: "checkbox"
+  nova_public:
+    value: false
+    label: "Public nova endpoint TLS"
+    weight: 120
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false"
+        action: "hide"
+  nova_public_hostname:
+    value: "nova.public.fuel.local"
+    label: "DNS hostname"
+    weight: 125
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_public.value == false"
+        action: "hide"
+  nova_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 130
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_public.value == false"
+        action: "hide"
+  nova_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 135
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_public.value == false or settings:fuel-ssl-openstack.nova_public_usercert.value == false"
+        action: "hide"
+  nova_internal:
+    value: false
+    label: "Internal nova endpoint TLS"
+    weight: 140
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false"
+        action: "hide"
+  nova_internal_hostname:
+    value: "nova.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 145
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_internal.value == false"
+        action: "hide"
+  nova_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 150
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_internal.value == false"
+        action: "hide"
+  nova_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 155
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_internal.value == false or settings:fuel-ssl-openstack.nova_internal_usercert.value == false"
+        action: "hide"
+  nova_admin:
+    value: false
+    label: "Admin nova endpoint TLS"
+    weight: 160
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false"
+        action: "hide"
+  nova_admin_hostname:
+    value: "nova.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 165
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_admin.value == false"
+        action: "hide"
+  nova_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 170
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_admin.value == false"
+        action: "hide"
+  nova_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 175
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.nova.value == false or settings:fuel-ssl-openstack.nova_admin.value == false or settings:fuel-ssl-openstack.nova_admin_usercert.value == false"
+        action: "hide"
+
+  glance:
+    value: false
+    label: "TLS for glance"
+    description: "Secure access to glance enabling TLS"
+    weight: 180
+    type: "checkbox"
+  glance_public:
+    value: false
+    label: "Public glance endpoint TLS"
+    weight: 185
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false"
+        action: "hide"
+  glance_public_hostname:
+    value: "glance.public.fuel.local"
+    label: "DNS hostname"
+    weight: 190
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_public.value == false"
+        action: "hide"
+  glance_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 195
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_public.value == false"
+        action: "hide"
+  glance_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 200
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_public.value == false or settings:fuel-ssl-openstack.glance_public_usercert.value == false"
+        action: "hide"
+  glance_internal:
+    value: false
+    label: "Internal glance endpoint TLS"
+    weight: 205
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false"
+        action: "hide"
+  glance_internal_hostname:
+    value: "glance.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 210
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_internal.value == false"
+        action: "hide"
+  glance_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 215
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_internal.value == false"
+        action: "hide"
+  glance_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 220
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_internal.value == false or settings:fuel-ssl-openstack.glance_internal_usercert.value == false"
+        action: "hide"
+  glance_admin:
+    value: false
+    label: "Admin glance endpoint TLS"
+    weight: 225
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false"
+        action: "hide"
+  glance_admin_hostname:
+    value: "glance.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 230
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_admin.value == false"
+        action: "hide"
+  glance_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 235
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_admin.value == false"
+        action: "hide"
+  glance_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 240
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.glance.value == false or settings:fuel-ssl-openstack.glance_admin.value == false or settings:fuel-ssl-openstack.glance_admin_usercert.value == false"
+        action: "hide"
+
+  cinder:
+    value: false
+    label: "TLS for cinder"
+    description: "Secure access to cinder enabling TLS"
+    weight: 245
+    type: "checkbox"
+  cinder_public:
+    value: false
+    label: "Public cinder endpoint TLS"
+    weight: 250
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false"
+        action: "hide"
+  cinder_public_hostname:
+    value: "cinder.public.fuel.local"
+    label: "DNS hostname"
+    weight: 255
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_public.value == false"
+        action: "hide"
+  cinder_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 260
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_public.value == false"
+        action: "hide"
+  cinder_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 265
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_public.value == false or settings:fuel-ssl-openstack.cinder_public_usercert.value == false"
+        action: "hide"
+  cinder_internal:
+    value: false
+    label: "Internal cinder endpoint TLS"
+    weight: 270
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false"
+        action: "hide"
+  cinder_internal_hostname:
+    value: "cinder.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 275
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_internal.value == false"
+        action: "hide"
+  cinder_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 280
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_internal.value == false"
+        action: "hide"
+  cinder_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 285
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_internal.value == false or settings:fuel-ssl-openstack.cinder_internal_usercert.value == false"
+        action: "hide"
+  cinder_admin:
+    value: false
+    label: "Admin cinder endpoint TLS"
+    weight: 290
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false"
+        action: "hide"
+  cinder_admin_hostname:
+    value: "cinder.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 295
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_admin.value == false"
+        action: "hide"
+  cinder_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 300
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_admin.value == false"
+        action: "hide"
+  cinder_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 305
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.cinder.value == false or settings:fuel-ssl-openstack.cinder_admin.value == false or settings:fuel-ssl-openstack.cinder_admin_usercert.value == false"
+        action: "hide"
+
+  heat:
+    value: false
+    label: "TLS for heat"
+    description: "Secure access to heat enabling TLS"
+    weight: 310
+    type: "checkbox"
+  heat_public:
+    value: false
+    label: "Public heat endpoint TLS"
+    weight: 315
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false"
+        action: "hide"
+  heat_public_hostname:
+    value: "heat.public.fuel.local"
+    label: "DNS hostname"
+    weight: 320
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_public.value == false"
+        action: "hide"
+  heat_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 325
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_public.value == false"
+        action: "hide"
+  heat_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 330
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_public.value == false or settings:fuel-ssl-openstack.heat_public_usercert.value == false"
+        action: "hide"
+  heat_internal:
+    value: false
+    label: "Internal heat endpoint TLS"
+    weight: 335
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false"
+        action: "hide"
+  heat_internal_hostname:
+    value: "heat.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 340
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_internal.value == false"
+        action: "hide"
+  heat_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 345
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_internal.value == false"
+        action: "hide"
+  heat_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 350
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_internal.value == false or settings:fuel-ssl-openstack.heat_internal_usercert.value == false"
+        action: "hide"
+  heat_admin:
+    value: false
+    label: "Admin heat endpoint TLS"
+    weight: 355
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false"
+        action: "hide"
+  heat_admin_hostname:
+    value: "heat.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 360
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_admin.value == false"
+        action: "hide"
+  heat_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 365
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_admin.value == false"
+        action: "hide"
+  heat_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 370
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.heat.value == false or settings:fuel-ssl-openstack.heat_admin.value == false or settings:fuel-ssl-openstack.heat_admin_usercert.value == false"
+        action: "hide"
+
+  neutron:
+    value: false
+    label: "TLS for neutron"
+    description: "Secure access to neutron enabling TLS"
+    weight: 375
+    type: "checkbox"
+  neutron_public:
+    value: false
+    label: "Public neutron endpoint TLS"
+    weight: 380
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false"
+        action: "hide"
+  neutron_public_hostname:
+    value: "neutron.public.fuel.local"
+    label: "DNS hostname"
+    weight: 385
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_public.value == false"
+        action: "hide"
+  neutron_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 390
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_public.value == false"
+        action: "hide"
+  neutron_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 395
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_public.value == false or settings:fuel-ssl-openstack.neutron_public_usercert.value == false"
+        action: "hide"
+  neutron_internal:
+    value: false
+    label: "Internal neutron endpoint TLS"
+    weight: 400
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false"
+        action: "hide"
+  neutron_internal_hostname:
+    value: "neutron.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 405
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_internal.value == false"
+        action: "hide"
+  neutron_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 410
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_internal.value == false"
+        action: "hide"
+  neutron_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 415
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_internal.value == false or settings:fuel-ssl-openstack.neutron_internal_usercert.value == false"
+        action: "hide"
+  neutron_admin:
+    value: false
+    label: "Admin neutron endpoint TLS"
+    weight: 420
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false"
+        action: "hide"
+  neutron_admin_hostname:
+    value: "neutron.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 425
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_admin.value == false"
+        action: "hide"
+  neutron_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 430
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_admin.value == false"
+        action: "hide"
+  neutron_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 435
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.neutron.value == false or settings:fuel-ssl-openstack.neutron_admin.value == false or settings:fuel-ssl-openstack.neutron_admin_usercert.value == false"
+        action: "hide"
+
+  swift:
+    value: false
+    label: "TLS for swift"
+    description: "Secure access to swift enabling TLS"
+    weight: 440
+    type: "checkbox"
+  swift_public:
+    value: false
+    label: "Public swift endpoint TLS"
+    weight: 445
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false"
+        action: "hide"
+  swift_public_hostname:
+    value: "swift.public.fuel.local"
+    label: "DNS hostname"
+    weight: 450
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_public.value == false"
+        action: "hide"
+  swift_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 455
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_public.value == false"
+        action: "hide"
+  swift_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 460
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_public.value == false or settings:fuel-ssl-openstack.swift_public_usercert.value == false"
+        action: "hide"
+  swift_internal:
+    value: false
+    label: "Internal swift endpoint TLS"
+    weight: 465
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false"
+        action: "hide"
+  swift_internal_hostname:
+    value: "swift.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 470
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_internal.value == false"
+        action: "hide"
+  swift_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 475
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_internal.value == false"
+        action: "hide"
+  swift_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 480
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_internal.value == false or settings:fuel-ssl-openstack.swift_internal_usercert.value == false"
+        action: "hide"
+  swift_admin:
+    value: false
+    label: "Admin swift endpoint TLS"
+    weight: 485
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false"
+        action: "hide"
+  swift_admin_hostname:
+    value: "swift.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 490
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_admin.value == false"
+        action: "hide"
+  swift_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 495
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_admin.value == false"
+        action: "hide"
+  swift_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 500
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.swift.value == false or settings:fuel-ssl-openstack.swift_admin.value == false or settings:fuel-ssl-openstack.swift_admin_usercert.value == false"
+        action: "hide"
+
+  sahara:
+    value: false
+    label: "TLS for sahara"
+    description: "Secure access to sahara enabling TLS"
+    weight: 505
+    type: "checkbox"
+  sahara_public:
+    value: false
+    label: "Public sahara endpoint TLS"
+    weight: 510
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false"
+        action: "hide"
+  sahara_public_hostname:
+    value: "sahara.public.fuel.local"
+    label: "DNS hostname"
+    weight: 515
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_public.value == false"
+        action: "hide"
+  sahara_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 520
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_public.value == false"
+        action: "hide"
+  sahara_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 525
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_public.value == false or settings:fuel-ssl-openstack.sahara_public_usercert.value == false"
+        action: "hide"
+  sahara_internal:
+    value: false
+    label: "Internal sahara endpoint TLS"
+    weight: 530
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false"
+        action: "hide"
+  sahara_internal_hostname:
+    value: "sahara.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 535
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_internal.value == false"
+        action: "hide"
+  sahara_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 540
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_internal.value == false"
+        action: "hide"
+  sahara_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 545
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_internal.value == false or settings:fuel-ssl-openstack.sahara_internal_usercert.value == false"
+        action: "hide"
+  sahara_admin:
+    value: false
+    label: "Admin sahara endpoint TLS"
+    weight: 550
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false"
+        action: "hide"
+  sahara_admin_hostname:
+    value: "sahara.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 555
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_admin.value == false"
+        action: "hide"
+  sahara_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 560
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_admin.value == false"
+        action: "hide"
+  sahara_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 565
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.sahara.value == false or settings:fuel-ssl-openstack.sahara_admin.value == false or settings:fuel-ssl-openstack.sahara_admin_usercert.value == false"
+        action: "hide"
+
+  murano:
+    value: false
+    label: "TLS for murano"
+    description: "Secure access to murano enabling TLS"
+    weight: 570
+    type: "checkbox"
+  murano_public:
+    value: false
+    label: "Public murano endpoint TLS"
+    weight: 575
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false"
+        action: "hide"
+  murano_public_hostname:
+    value: "murano.public.fuel.local"
+    label: "DNS hostname"
+    weight: 580
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_public.value == false"
+        action: "hide"
+  murano_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 585
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_public.value == false"
+        action: "hide"
+  murano_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 590
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_public.value == false or settings:fuel-ssl-openstack.murano_public_usercert.value == false"
+        action: "hide"
+  murano_internal:
+    value: false
+    label: "Internal murano endpoint TLS"
+    weight: 595
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false"
+        action: "hide"
+  murano_internal_hostname:
+    value: "murano.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 600
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_internal.value == false"
+        action: "hide"
+  murano_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 605
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_internal.value == false"
+        action: "hide"
+  murano_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 610
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_internal.value == false or settings:fuel-ssl-openstack.murano_internal_usercert.value == false"
+        action: "hide"
+  murano_admin:
+    value: false
+    label: "Admin murano endpoint TLS"
+    weight: 615
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false"
+        action: "hide"
+  murano_admin_hostname:
+    value: "murano.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 620
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_admin.value == false"
+        action: "hide"
+  murano_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 625
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_admin.value == false"
+        action: "hide"
+  murano_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 630
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.murano.value == false or settings:fuel-ssl-openstack.murano_admin.value == false or settings:fuel-ssl-openstack.murano_admin_usercert.value == false"
+        action: "hide"
+
+  ceilometer:
+    value: false
+    label: "TLS for ceilometer"
+    description: "Secure access to ceilometer enabling TLS"
+    weight: 635
+    type: "checkbox"
+  ceilometer_public:
+    value: false
+    label: "Public ceilometer endpoint TLS"
+    weight: 640
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false"
+        action: "hide"
+  ceilometer_public_hostname:
+    value: "ceilometer.public.fuel.local"
+    label: "DNS hostname"
+    weight: 645
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_public.value == false"
+        action: "hide"
+  ceilometer_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 650
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_public.value == false"
+        action: "hide"
+  ceilometer_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 655
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_public.value == false or settings:fuel-ssl-openstack.ceilometer_public_usercert.value == false"
+        action: "hide"
+  ceilometer_internal:
+    value: false
+    label: "Internal ceilometer endpoint TLS"
+    weight: 660
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false"
+        action: "hide"
+  ceilometer_internal_hostname:
+    value: "ceilometer.internal.fuel.local"
+    label: "DNS hostname"
+    weight: 665
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_internal.value == false"
+        action: "hide"
+  ceilometer_internal_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 670
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_internal.value == false"
+        action: "hide"
+  ceilometer_internal_certdata:
+    value: ""
+    label: "Internal endpoint certificate"
+    weight: 675
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_internal.value == false or settings:fuel-ssl-openstack.ceilometer_internal_usercert.value == false"
+        action: "hide"
+  ceilometer_admin:
+    value: false
+    label: "Admin ceilometer endpoint TLS"
+    weight: 680
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false"
+        action: "hide"
+  ceilometer_admin_hostname:
+    value: "ceilometer.admin.fuel.local"
+    label: "DNS hostname"
+    weight: 685
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_admin.value == false"
+        action: "hide"
+  ceilometer_admin_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 690
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_admin.value == false"
+        action: "hide"
+  ceilometer_admin_certdata:
+    value: ""
+    label: "Admin endpoint certificate"
+    weight: 695
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.ceilometer.value == false or settings:fuel-ssl-openstack.ceilometer_admin.value == false or settings:fuel-ssl-openstack.ceilometer_admin_usercert.value == false"
+        action: "hide"
+
+  radosgw:
+    value: false
+    label: "TLS for radosgw"
+    description: "Secure access to radosgw enabling TLS"
+    weight: 700
+    type: "checkbox"
+  radosgw_public:
+    value: true
+    label: "Public radosgw endpoint TLS"
+    weight: 705
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.radosgw.value == false or settings:fuel-ssl-openstack.radosgw.value == true"
+        action: "hide"
+  radosgw_public_hostname:
+    value: "radosgw.public.fuel.local"
+    label: "DNS hostname"
+    weight: 710
+    type: "text"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.radosgw.value == false or settings:fuel-ssl-openstack.radosgw_public.value == false"
+        action: "hide"
+  radosgw_public_usercert:
+    value: false
+    label: "Upload custom certificate"
+    weight: 715
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.radosgw.value == false or settings:fuel-ssl-openstack.radosgw_public.value == false"
+        action: "hide"
+  radosgw_public_certdata:
+    value: ""
+    label: "Public endpoint certificate"
+    weight: 720
+    type: "file"
+    restrictions:
+      - condition: "settings:fuel-ssl-openstack.radosgw.value == false or settings:fuel-ssl-openstack.radosgw_public.value == false or settings:fuel-ssl-openstack.radosgw_public_usercert.value == false"
+        action: "hide"

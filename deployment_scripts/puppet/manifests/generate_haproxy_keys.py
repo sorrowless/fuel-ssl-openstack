@@ -213,15 +213,15 @@ if __name__ == '__main__':
               service      - service name (affect target filename only)
         Returns: None
         """
-         ssl_data = SSL()
-         ssl_data.createSelfSignedCertificate(**cname)
-         functions = {'saveCertToFile':'crt',
-                      'savePKeyToFile':'key',
-                      'saveAllToFile':'pem'}
-         for function,ext in functions.items():
-             func = getattr(ssl_data, function)
-             func(filename='%s/%s_%s.%s' % (basedir, endpointtype,
-                 service, ext))
+        ssl_data = SSL()
+        ssl_data.createSelfSignedCertificate(**cname)
+        functions = {'saveCertToFile':'crt',
+                     'savePKeyToFile':'key',
+                     'saveAllToFile':'pem'}
+        for function,ext in functions.items():
+            func = getattr(ssl_data, function)
+            func(filename='%s/%s_%s.%s' % (basedir, endpointtype,
+                service, ext))
 
 
     data = yaml.safe_load(parser.parse_args().json)
