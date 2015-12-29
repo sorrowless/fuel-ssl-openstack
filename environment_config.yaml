@@ -1,13 +1,6 @@
 attributes:
-  plugin_id:
-    value: 1
-    label: "temporary workaround to nailgun bug"
-    description: "temp"
-    weight: 5
-    type: "text"
-    restrictions:
-      - condition: "settings:fuel-ssl-openstack.horizon.value == false or settings:fuel-ssl-openstack.horizon.value == true"
-        action: "hide"
+  metadata:
+    plugin_id: "1"
   horizon:
     value: false
     label: "HTTPS for Horizon"
